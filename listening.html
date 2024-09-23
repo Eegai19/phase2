@@ -1,293 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audio Speak Module</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      background-color: #f0f0f0;
-      position: relative;
-    }
-    .nav-bar {
-      background: blue;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      z-index: 10;
-    }
-    .logo {
-      color: white;
-      font-size: 24px;
-    }
-    .menu-button, .account-icon {
-      cursor: pointer;
-      color: white;
-    }
-    .account-dropdown {
-      display: none;
-      position: absolute;
-      right: 0;
-      background: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-    }
-    .account-dropdown a {
-      display: block;
-      padding: 10px;
-      color: #4CAF50;
-      text-decoration: none;
-    }
-    .account-dropdown a:hover {
-      background: #f0f0f0;
-    }
-    .main-content {
-      flex: 1;
-      display: flex;
-      padding: 20px;
-      justify-content: space-between;
-    }
-    .audio-module {
-      flex: 1;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #audio-player {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    .btn {
-      background-color: #4CAF50;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .btn:hover {
-      background-color: #3e8e41;
-    }
-    .question-nodes {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      padding: 20px;
-      height: 100%;
-    }
-    .question-node {
-      width: 50px;
-      height: 50px;
-      border: 2px solid #4CAF50;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #4CAF50;
-      font-size: 20px;
-      margin: 10px 0;
-    }
-    .completed-node {
-      background-color: #c8e6c9;
-    }
-    footer {
-      background: grey;
-      color: white;
-      text-align: center;
-      padding: 10px 0;
-    }
-    /* Sidebar styles */
-    .sidebar {
-      display: none;
-      position: fixed;
-      top: 60px;
-      left: 0;
-      background-color: white;
-      width: 200px;
-      height: 100%;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      z-index: 100;
-    }
-    .sidebar ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
-    .sidebar ul li {
-      padding: 15px 20px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .sidebar ul li a {
-      text-decoration: none;
-      color: #4CAF50;
-    }
-    .sidebar ul li a:hover {
-      background-color: #f0f0f0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Listening Practice</title>
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#app {
+    flex: 1;
+    width: 100%; /* Make the app take full width */
+    max-width: 800px; /* Optionally adjust the max width */
+    margin: 0 auto; /* Center the app */
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+    text-align: center; /* Center the title */
+}
+
+footer {
+    background: grey;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.sidebar {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    background-color: white;
+    width: 200px;
+    height: calc(100% - 60px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #4CAF50;
+}
+
+.sidebar ul li a:hover {
+    background-color: #f0f0f0;
+}
+
+button {
+    margin: 10px;
+    margin-left: 35% ;
+    
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block; /* Ensure buttons are displayed as block elements */
+    width: 25%; /* Make buttons take full width */
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.hidden {
+    display: none;
+}
+
+#questions-container {
+    margin-top: 20px;
+}
+
+.nav-bar {
+    background: blue;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+}
+
+.menu-button,
+.account-icon {
+    cursor: pointer;
+    color: white;
+}
+
+.account-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.account-dropdown a {
+    display: block;
+    padding: 10px;
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.account-dropdown a:hover {
+    background: #f0f0f0;
+}
+
+    </style>
 </head>
 <body>
-
-<nav class="nav-bar">
-    <div class="menu-button" onclick="toggleMenu()">☰ Menu</div>
-    <div class="logo"> <a href="http://127.0.0.1:5500/mainest.html">S-KILL</div></a>
-    <div class="account-icon" onclick="toggleDropdown()">
-        Account
-        <div class="account-dropdown" id="accountDropdown">
-            <a href="#" id="emailDisplay">user@example.com</a>
-            <a href="index" onclick="logout()">Logout</a>
+    <nav class="nav-bar">
+        <div class="menu-button" onclick="toggleMenu()">☰ Menu</div>
+        <div class="logo"> <a href="mainest.html">S-KILL</div></a>
+        <div class="account-icon" onclick="toggleDropdown()">
+            Account
+            <div class="account-dropdown" id="accountDropdown">
+                <a href="#" id="emailDisplay">user@example.com</a>
+                <a href="index" onclick="logout()">Logout</a>
+            </div>
         </div>
+    </nav>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="#">Evaluate</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
     </div>
-</nav>
+    <div id="app">
+        <!-- Part A Section -->
+        <section id="part-a-section">
+            <h2>Part A: Listen and Repeat</h2>
+            <audio id="audio-player" controls style="margin-left: 29%;">
+                <source id="audio-source" src="audio1.wav" type="audio/wav">
+                Your browser does not support the audio tag.
+            </audio>
+            <button id="start-listening">Start Recording</button>
+            <button id="stop-listening" disabled>Stop Recording</button>
+            <button id="next-button" disabled>Next</button>
+            <button id="go-to-part-b-button" class="hidden">Go to Part B</button>
+        </section>
 
-<!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-    <ul>
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="#">Evaluate</a></li>
-        <li><a href="#">Settings</a></li>
-    </ul>
-</div>
+        <!-- Part B Section -->
+        <section id="part-b-section" class="hidden">
+            <h2>Part B: Long Audio with MCQs</h2>
+            <audio id="part-b-audio-player" controls style="margin-left: 30%;">
+                <source id="part-b-audio-source" src="long_audio1.wav" type="audio/wav">
+                Your browser does not support the audio tag.
+            </audio>
+            <div id="questions-container" style="margin-left: 30%;"></div>
+            <button id="next-question-button" disabled>Next Question</button>
+            <button id="next-audio-button" class="hidden">Next Audio</button>
+        </section>
 
-<div class="main-content">
-  <div class="audio-module">
-    <p>Listen to the audio once and repeat it:</p>
-    <audio id="audio-player" controls>
-      <source id="audio-source" src="audio1.wav" type="audio/wav">
-      Your browser does not support the audio element.
-    </audio>
-    
-    <button type="button" class="btn" id="record-button">
-      <span class="glyphicon glyphicon-record"></span> Record
-    </button>
-    <div id="timer" style="font-size: 20px; margin-top: 10px;"></div>
-    <div id="feedback-container"></div>
-    
-    <button id="next-button" class="btn" style="display: none;">Next</button>
-    <button id="submit-button" class="btn" style="display: none;">Submit Test</button>
-  </div>
-
-  <div class="question-nodes" id="question-nodes"></div>
-</div>
-
-<footer>
-    <p>&copy; 2024 S-KILL Enhancement Platform | <a href="#" style="color: white;">Privacy Policy</a> | <a href="#" style="color: white;">Terms of Service</a></p>
-</footer>
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script>
-    const audioPlayer = document.getElementById('audio-player');
-    const recordButton = document.getElementById('record-button');
-    const feedbackContainer = document.getElementById('feedback-container');
-    const questionNodesContainer = document.getElementById('question-nodes');
-    const nextButton = document.getElementById('next-button');
-    const submitButton = document.getElementById('submit-button');
-
-    let mediaRecorder = null;
-    let stream = null;
-    let timerInterval;
-    let currentAudioIndex = 0;
-    const audioFiles = ['audio1.wav', 'audio2.wav', 'audio3.wav', 'audio4.wav', 'audio5.wav', 
-                        'audio6.wav', 'audio7.wav', 'audio8.wav', 'audio9.wav', 'audio10.wav'];
-    let userResponses = [];
-
-    // Initialize question nodes
-    for (let i = 0; i < audioFiles.length; i++) {
-      const node = document.createElement('div');
-      node.className = 'question-node';
-      node.textContent = i + 1;
-      questionNodesContainer.appendChild(node);
-    }
-
-    audioPlayer.addEventListener('ended', () => {
-      audioPlayer.pause(); 
-      audioPlayer.currentTime = 0; 
-    });
-
-    recordButton.addEventListener('click', async () => {
-      if (currentAudioIndex < audioFiles.length) {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-
-        mediaRecorder.ondataavailable = (event) => {
-          userResponses[currentAudioIndex] = new Blob([event.data], { type: 'audio/wav' });
-        };
-
-        mediaRecorder.start();
-        recordButton.disabled = true; 
-
-        let timeLeft = 2; // Changed to 2 seconds
-        const timerDisplay = document.getElementById('timer');
-        timerDisplay.textContent = `Time left: ${timeLeft}s`;
-
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          timerDisplay.textContent = `Time left: ${timeLeft}s`;
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            mediaRecorder.stop();
-            stream.getTracks().forEach(track => track.stop());
-            document.querySelectorAll('.question-node')[currentAudioIndex].classList.add('completed-node');
-
-            if (currentAudioIndex < audioFiles.length - 1) {
-              nextButton.style.display = 'block';
-            } else {
-              submitButton.style.display = 'block'; 
-            }
-            currentAudioIndex++;
-            resetForNextQuestion();
-          }
-        }, 1000);
-      }
-    });
-
-    nextButton.addEventListener('click', () => {
-      resetForNextQuestion();
-      nextButton.style.display = 'none'; 
-    });
-
-    function resetForNextQuestion() {
-      recordButton.disabled = false; 
-      audioPlayer.src = audioFiles[currentAudioIndex]; 
-      audioPlayer.load();
-    }
-
-    submitButton.addEventListener('click', () => {
-      const formData = new FormData();
-      for (let i = 0; i < userResponses.length; i++) {
-        formData.append('response' + i, userResponses[i]);
-      }
-
-      // POST request for user responses
-      fetch('/submit_responses', {
-        method: 'POST',
-        body: formData
-      }).then(response => {
-        if (response.ok) {
-          feedbackContainer.textContent = 'Responses submitted successfully!';
-        } else {
-          feedbackContainer.textContent = 'Failed to submit responses.';
-        }
-      }).catch(error => {
-        console.error('Error submitting responses:', error);
-      });
-    });
-
-    function toggleDropdown() {
+        <div id="report-container"></div>
+    </div>
+    <footer>
+        <p>&copy; 2024 S-KILL Enhancement Platform | <a href="#" style="color: white;">Privacy Policy</a> | <a href="#" style="color: white;">Terms of Service</a></p>
+    </footer>
+    <script>
+         function toggleDropdown() {
       document.getElementById('accountDropdown').classList.toggle('show');
     }
 
@@ -307,11 +213,196 @@
         for (var i = 0; i < dropdowns.length; i++) {
           var openDropdown = dropdowns[i];
           if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
+            openDropdown.classList.remove('show');}}}
           }
+        
+        // Part A: Listen and Repeat
+        const audioPlayer = document.getElementById('audio-player');
+        const startListeningButton = document.getElementById('start-listening');
+        const stopListeningButton = document.getElementById('stop-listening');
+        const nextButton = document.getElementById('next-button');
+        const goToPartBButton = document.getElementById('go-to-part-b-button');
+        const partASection = document.getElementById('part-a-section');
+        const partBSection = document.getElementById('part-b-section');
+        const reportContainer = document.getElementById('report-container');
+
+        const audioFiles = ['audio1.wav', 'audio2.wav', 'audio3.wav', 'audio4.wav', 'audio5.wav'];
+        let currentAudioIndex = 0;
+
+        startListeningButton.addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+            stopListeningButton.disabled = false;
+            mediaRecorder.onstop = () => {};
+        });
+
+        stopListeningButton.addEventListener('click', () => {
+            nextButton.disabled = false;
+        });
+
+        nextButton.addEventListener('click', () => {
+            currentAudioIndex++;
+            if (currentAudioIndex < audioFiles.length) {
+                document.getElementById('audio-source').src = audioFiles[currentAudioIndex];
+                audioPlayer.load();
+                nextButton.disabled = true;
+            } else {
+                goToPartBButton.classList.remove('hidden');
+            }
+        });
+
+        // Part B: Long Audio with MCQs
+        const partBAudioFiles = [
+            'long_audio1.wav',
+            'long_audio2.wav',
+            'long_audio3.wav',
+            'long_audio4.wav',
+            'long_audio5.wav'
+        ];
+        const partBQuestions = [
+            // Questions for long_audio1.wav
+            [
+                { question: "What is the main topic discussed?", options: ["Topic 1", "Topic 2", "Topic 3", "Topic 4"], correctAnswer: "Topic 1" },
+                { question: "What is mentioned as a key point?", options: ["Point A", "Point B", "Point C", "Point D"], correctAnswer: "Point A" },
+                { question: "Who is the speaker?", options: ["Person 1", "Person 2", "Person 3", "Person 4"], correctAnswer: "Person 1" },
+                { question: "What recommendation is given?", options: ["Recommendation A", "Recommendation B", "Recommendation C", "Recommendation D"], correctAnswer: "Recommendation A" },
+                { question: "What is the conclusion drawn?", options: ["Conclusion A", "Conclusion B", "Conclusion C", "Conclusion D"], correctAnswer: "Conclusion A" },
+                { question: "Which example is used?", options: ["Example 1", "Example 2", "Example 3", "Example 4"], correctAnswer: "Example 1" },
+                { question: "What issue is addressed?", options: ["Issue A", "Issue B", "Issue C", "Issue D"], correctAnswer: "Issue A" },
+                { question: "What solution is proposed?", options: ["Solution 1", "Solution 2", "Solution 3", "Solution 4"], correctAnswer: "Solution 1" },
+                { question: "How does the speaker feel about the topic?", options: ["Positive", "Negative", "Neutral", "Uncertain"], correctAnswer: "Positive" },
+                { question: "What action is suggested?", options: ["Action 1", "Action 2", "Action 3", "Action 4"], correctAnswer: "Action 1" }
+            ],
+            // Questions for long_audio2.wav
+            [
+                { question: "What is the focus of the audio?", options: ["Focus 1", "Focus 2", "Focus 3", "Focus 4"], correctAnswer: "Focus 1" },
+                { question: "What data is presented?", options: ["Data A", "Data B", "Data C", "Data D"], correctAnswer: "Data A" },
+                { question: "Which outcome is highlighted?", options: ["Outcome A", "Outcome B", "Outcome C", "Outcome D"], correctAnswer: "Outcome A" },
+                { question: "What trend is observed?", options: ["Trend 1", "Trend 2", "Trend 3", "Trend 4"], correctAnswer: "Trend 1" },
+                { question: "What is the speaker's perspective?", options: ["Perspective A", "Perspective B", "Perspective C", "Perspective D"], correctAnswer: "Perspective A" },
+                { question: "What implication is discussed?", options: ["Implication 1", "Implication 2", "Implication 3", "Implication 4"], correctAnswer: "Implication 1" },
+                { question: "Which demographic is referenced?", options: ["Demographic 1", "Demographic 2", "Demographic 3", "Demographic 4"], correctAnswer: "Demographic 1" },
+                { question: "What recommendation is made?", options: ["Recommendation A", "Recommendation B", "Recommendation C", "Recommendation D"], correctAnswer: "Recommendation A" },
+                { question: "What call to action is given?", options: ["Action 1", "Action 2", "Action 3", "Action 4"], correctAnswer: "Action 1" },
+                { question: "What conclusion is reached?", options: ["Conclusion 1", "Conclusion 2", "Conclusion 3", "Conclusion 4"], correctAnswer: "Conclusion 1" }
+            ],
+            // Questions for long_audio3.wav
+            [
+                { question: "What issue is explored?", options: ["Issue 1", "Issue 2", "Issue 3", "Issue 4"], correctAnswer: "Issue 1" },
+                { question: "Which method is discussed?", options: ["Method A", "Method B", "Method C", "Method D"], correctAnswer: "Method A" },
+                { question: "What result is highlighted?", options: ["Result A", "Result B", "Result C", "Result D"], correctAnswer: "Result A" },
+                { question: "What challenge is mentioned?", options: ["Challenge 1", "Challenge 2", "Challenge 3", "Challenge 4"], correctAnswer: "Challenge 1" },
+                { question: "What potential is discussed?", options: ["Potential A", "Potential B", "Potential C", "Potential D"], correctAnswer: "Potential A" },
+                { question: "What example is used?", options: ["Example 1", "Example 2", "Example 3", "Example 4"], correctAnswer: "Example 1" },
+                { question: "What recommendation is provided?", options: ["Recommendation 1", "Recommendation 2", "Recommendation 3", "Recommendation 4"], correctAnswer: "Recommendation 1" },
+                { question: "What future trend is suggested?", options: ["Trend A", "Trend B", "Trend C", "Trend D"], correctAnswer: "Trend A" },
+                { question: "What conclusion is drawn?", options: ["Conclusion A", "Conclusion B", "Conclusion C", "Conclusion D"], correctAnswer: "Conclusion A" },
+                { question: "What action is proposed?", options: ["Action 1", "Action 2", "Action 3", "Action 4"], correctAnswer: "Action 1" }
+            ],
+            // Questions for long_audio4.wav
+            [
+                { question: "What key point is made?", options: ["Point 1", "Point 2", "Point 3", "Point 4"], correctAnswer: "Point 1" },
+                { question: "What example is used?", options: ["Example 1", "Example 2", "Example 3", "Example 4"], correctAnswer: "Example 1" },
+                { question: "What conclusion is reached?", options: ["Conclusion A", "Conclusion B", "Conclusion C", "Conclusion D"], correctAnswer: "Conclusion A" },
+                { question: "What recommendation is given?", options: ["Recommendation A", "Recommendation B", "Recommendation C", "Recommendation D"], correctAnswer: "Recommendation A" },
+                { question: "What challenge is discussed?", options: ["Challenge A", "Challenge B", "Challenge C", "Challenge D"], correctAnswer: "Challenge A" },
+                { question: "What future trend is mentioned?", options: ["Trend A", "Trend B", "Trend C", "Trend D"], correctAnswer: "Trend A" },
+                { question: "What perspective is presented?", options: ["Perspective 1", "Perspective 2", "Perspective 3", "Perspective 4"], correctAnswer: "Perspective 1" },
+                { question: "What example is highlighted?", options: ["Example 1", "Example 2", "Example 3", "Example 4"], correctAnswer: "Example 1" },
+                { question: "What call to action is made?", options: ["Action 1", "Action 2", "Action 3", "Action 4"], correctAnswer: "Action 1" },
+                { question: "What is the overall conclusion?", options: ["Conclusion A", "Conclusion B", "Conclusion C", "Conclusion D"], correctAnswer: "Conclusion A" }
+            ],
+            // Questions for long_audio5.wav
+            [
+                { question: "What topic is discussed?", options: ["Topic A", "Topic B", "Topic C", "Topic D"], correctAnswer: "Topic A" },
+                { question: "What conclusion is drawn?", options: ["Conclusion A", "Conclusion B", "Conclusion C", "Conclusion D"], correctAnswer: "Conclusion A" },
+                { question: "What example is given?", options: ["Example 1", "Example 2", "Example 3", "Example 4"], correctAnswer: "Example 1" },
+                { question: "What recommendation is made?", options: ["Recommendation A", "Recommendation B", "Recommendation C", "Recommendation D"], correctAnswer: "Recommendation A" },
+                { question: "What solution is proposed?", options: ["Solution 1", "Solution 2", "Solution 3", "Solution 4"], correctAnswer: "Solution 1" },
+                { question: "What issue is raised?", options: ["Issue A", "Issue B", "Issue C", "Issue D"], correctAnswer: "Issue A" },
+                { question: "What action is suggested?", options: ["Action 1", "Action 2", "Action 3", "Action 4"], correctAnswer: "Action 1" },
+                { question: "What trend is observed?", options: ["Trend A", "Trend B", "Trend C", "Trend D"], correctAnswer: "Trend A" },
+                { question: "What perspective is shared?", options: ["Perspective 1", "Perspective 2", "Perspective 3", "Perspective 4"], correctAnswer: "Perspective 1" },
+                { question: "What is the main conclusion?", options: ["Conclusion A", "Conclusion B", "Conclusion C", "Conclusion D"], correctAnswer: "Conclusion A" }
+            ]
+        ];
+
+        let currentPartBAudioIndex = 0;
+        let currentQuestionIndex = 0;
+
+        goToPartBButton.addEventListener('click', () => {
+            partASection.classList.add('hidden');
+            partBSection.classList.remove('hidden');
+            loadPartBAudio();
+            currentQuestionIndex = 0; // Reset question index
+            loadQuestion(); // Load the first question
+        });
+
+        function loadPartBAudio() {
+            document.getElementById('part-b-audio-source').src = partBAudioFiles[currentPartBAudioIndex];
+            document.getElementById('part-b-audio-player').load();
         }
-      }
-    }
-</script>
+
+        document.getElementById('next-question-button').addEventListener('click', () => {
+            const questions = partBQuestions[currentPartBAudioIndex];
+            const selectedOption = document.querySelector('input[name="question"]:checked');
+
+            if (selectedOption) {
+                const isCorrect = selectedOption.value === questions[currentQuestionIndex].correctAnswer;
+                reportContainer.innerHTML = `<h3>${isCorrect ? "Correct!" : "Incorrect!"}</h3>`;
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion(); // Load the next question
+                } else {
+                    document.getElementById('next-audio-button').classList.remove('hidden');
+                    document.getElementById('next-question-button').disabled = true;
+                }
+            } else {
+                alert('Please select an answer before proceeding!');
+            }
+        });
+
+        document.getElementById('next-audio-button').addEventListener('click', () => {
+            currentPartBAudioIndex++;
+            if (currentPartBAudioIndex < partBAudioFiles.length) {
+                loadPartBAudio();
+                currentQuestionIndex = 0; // Reset question index for the next audio
+                loadQuestion(); // Load the first question
+                document.getElementById('next-audio-button').classList.add('hidden');
+                document.getElementById('next-question-button').disabled = false; // Enable button for the first question
+                reportContainer.innerHTML = ''; // Clear previous report
+            } else {
+                alert('You have completed all audios!');
+                partBSection.classList.add('hidden');
+                partASection.classList.remove('hidden'); // Return to Part A
+                currentAudioIndex = 0; // Reset audio index for Part A
+                goToPartBButton.classList.add('hidden'); // Hide go to Part B button
+            }
+        });
+
+        function loadQuestion() {
+            const questions = partBQuestions[currentPartBAudioIndex];
+            if (currentQuestionIndex < questions.length) {
+                const question = questions[currentQuestionIndex];
+
+                const questionsContainer = document.getElementById('questions-container');
+                questionsContainer.innerHTML = `        
+                    <p>${currentQuestionIndex + 1}. ${question.question}</p>
+                    ${question.options.map((option) => `
+                        <label>
+                            <input type="radio" name="question" value="${option}">
+                            ${option}
+                        </label>
+                    `).join('')}
+                `;
+
+                document.getElementById('next-question-button').disabled = false; // Enable button
+                reportContainer.innerHTML = ''; // Clear previous report
+            }
+        }
+    
+    </script>
 </body>
 </html>
