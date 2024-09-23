@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S-KILL Enhancement Platform</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background-color: #f0f0f0;
+    }
+
+    .nav-bar {
+      background: blue;
+      padding: 15px 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .menu-button {
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .menu-content {
+      display: none;
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      text-align: left;
+      width: 100%;
+      position: absolute;
+      top: 60px;
+      left: 0;
+    }
+
+    .menu-content a {
+      display: block;
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      margin-bottom: 10px;
+    }
+
+    .menu-content a:hover {
+      background-color: #4CAF50;
+    }
+
+    .nav-bar .logo {
+      color: white;
+      font-size: 24px;
+      text-align: center;
+      flex: 1;
+    }
+
+    .nav-bar .account-icon {
+      color: white;
+      position: relative;
+      cursor: pointer;
+      margin-right: 2cm;
+    }
+
+    .account-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      margin-top: 10px;
+      z-index: 1001;
+    }
+
+    .account-dropdown a {
+      display: block;
+      padding: 10px;
+      color: #4CAF50;
+      text-decoration: none;
+    }
+
+    .account-dropdown a:hover {
+      background: #f0f0f0;
+    }
+
+    .header-hero-wrapper {
+      background: #6bbf7c;
+      color: white;
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1976d2;
+    }
+
+    footer {
+      background: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    footer a {
+      color: #4CAF50;
+      text-decoration: none;
+      margin: 5px 10px;
+    }
+
+    footer p {
+      margin: 0;
+    }
+
+    .content {
+      padding: 20px;
+      margin: 100px auto 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 100%;
+    }
+
+    .content p {
+      text-align: justify;
+      width: 100%;
+    }
+
+    .offer-section {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .course-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-top: 20px;
+    }
+
+    .course-list {
+      display: flex;
+      overflow-x: hidden;
+      width: 80%;
+      gap: 15px;
+    }
+
+    .course-card {
+      width: 18%;
+      padding: 20px;
+      background: #e0f7fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .scroll-left, .scroll-right {
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .scroll-left {
+      position: absolute;
+      left: 0;
+    }
+
+    .scroll-right {
+      position: absolute;
+      right: 0;
+    }
+
+    .evaluate-section {
+      padding: 20px;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .evaluate-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .eval-button {
+      padding: 15px 30px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    .eval-button:hover {
+      background-color: #1565c0;
+    }
+  </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <div class="menu-button" onclick="toggleMenu()">☰ Menu</div>
+        <div class="logo">S-KILL</div>
+        <div class="account-icon" onclick="toggleDropdown()">
+            Account
+            <div class="account-dropdown" id="accountDropdown">
+                <a href="#" id="emailDisplay">user@example.com</a>
+                <a href="index.html" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="menu-content" id="menuContent">
+        <a href="#">Dashboard</a>
+        <a href="http://127.0.0.1:5500/test.html">Evaluation</a>
+        <a href="#">Language</a>
+        <a href="#">Settings</a>
+    </div>
+
+    <div class="content">
+        <h2>Welcome to S-KILL</h2>
+        <p>At S-KILL, our mission is to empower individuals by enhancing their soft skills, which are critical for success in today's competitive job market. Soft skills, such as communication, problem-solving, teamwork, and leadership, are often the differentiators between average performance and outstanding achievement in both personal and professional settings. At S-KILL, we believe that everyone has the potential to improve these skills, and our platform is designed to offer the tools and resources necessary to do so. We provide a wide range of features tailored to support your personal growth. Whether you're a job seeker aiming to ace interviews or a working professional looking to enhance workplace interactions, S-KILL offers personalized learning paths that adapt to your unique needs. Our platform includes a variety of assessments to gauge your current skill levels and recommend appropriate courses of action. These assessments are designed to evaluate essential soft skills like communication clarity, active listening, emotional intelligence, and conflict resolution, providing you with detailed feedback to guide your improvement journey. In addition to assessments, S-KILL offers instructional video content and interactive tools that allow you to practice and refine your skills in real-world scenarios. Our video tutorials are crafted by industry experts and cover topics ranging from public speaking to negotiation strategies. You can watch these videos at your own pace and revisit them as needed, making it easy to absorb and implement the techniques being taught. With interactive quizzes and practice sessions, you'll have ample opportunities to put what you've learned into action. A key feature of S-KILL is its real-time progress tracking system. As you work through different courses and activities, you'll be able to monitor your improvements and identify areas where further practice is needed. This progress tracking keeps you motivated and helps you stay on course toward achieving your personal goals. Additionally, our platform is accessible from anywhere, offering the flexibility to fit your learning schedule around other commitments. Moreover, S-KILL fosters a supportive learning environment by integrating a community-driven support system. You can join groups of fellow learners, share experiences, ask questions, and offer feedback, creating a collaborative atmosphere that enhances the learning process. Whether you're engaging with other users in discussions or receiving feedback from experts, you'll never feel like you're learning in isolation. Our platform's versatility ensures that you're not only improving your soft skills but also preparing yourself for real-world challenges. From interviews to workplace interactions, S-KILL equips you with the tools needed to excel. We are dedicated to helping you unlock your full potential, ensuring continuous learning and growth in your career.</p>
+
+        <h2>Comprehensive Skill Assessments</h2>
+        <p>Our comprehensive skill assessments are designed to evaluate your proficiency in key areas of soft skills. These assessments will give you valuable insights into your strengths and areas for improvement. Each test is carefully crafted to mimic real-world scenarios, allowing you to practice essential skills like communication, problem-solving, and decision-making. By completing these assessments, you will gain a clearer understanding of where you stand and what steps you need to take to improve. The detailed feedback provided at the end of each assessment will guide your journey to becoming a more competent and confident professional.</p>
+
+        <h2>Tailored Learning Paths</h2>
+        <p>S-KILL offers personalized learning paths based on your assessment results. These tailored paths ensure that you focus on the areas that matter most to you. You'll have access to a variety of resources, including instructional videos, articles, and interactive exercises, all designed to help you enhance your skills effectively. Our learning paths are flexible and adaptable, allowing you to progress at your own pace while still being challenged. With S-KILL, you'll never feel overwhelmed, as our structured approach helps you navigate your learning journey with ease.</p>
+
+        <h2>Community Support</h2>
+        <p>The S-KILL platform encourages collaboration among users through community support features. You can join groups, participate in discussions, and share experiences with fellow learners. This sense of community fosters a supportive environment that enhances the learning experience. Whether you’re seeking advice on a particular topic or looking to share your success stories, the community aspect of S-KILL helps you stay engaged and motivated on your journey to skill enhancement.</p>
+
+        <h2>Progress Tracking</h2>
+        <p>Our real-time progress tracking system allows you to monitor your improvements as you engage with the various features of S-KILL. You'll receive regular updates on your achievements, making it easier to stay focused on your goals. By keeping track of your progress, you can celebrate your successes and identify areas that may require additional attention. This feature is designed to help you stay motivated and accountable as you work toward becoming a more skilled individual.</p>
+
+        <h2>What Do We Offer?</h2>
+        <div class="offer-section">
+            <h3>Courses</h3>
+            <div class="course-wrapper">
+                <button class="scroll-left" onclick="scrollCourses('left')">❮</button>
+                <div class="course-list" id="courseList">
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                    <div class="course-card">Course 1</div>
+                    <div class="course-card">Course 2</div>
+                    <div class="course-card">Course 3</div>
+                    <div class="course-card">Course 4</div>
+                    <div class="course-card">Course 5</div>
+                </div>
+                <button class="scroll-right" onclick="scrollCourses('right')">❯</button>
+            </div>
+        </div>
+
+        <div class="evaluate-section">
+            <h3>Evaluate Yourself</h3>
+            <div class="evaluate-buttons" >
+                <button class="eval-button"><a href="speaking-test.html">Speaking</button></a>
+                <button class="eval-button"><a href="pronoun.html">Pronunciation</button></a>
+                <button class="eval-button"><a href="writing.html">Writing</button></a>
+                <button class="eval-button"><a href="listening.html">Listening</button></a>
+                
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 S-KILL Enhancement Platform | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+
+    <script>
+       
+       function toggleMenu() {
+  const menu = document.getElementById('menuContent');
+  const isMenuVisible = menu.style.display === 'block';
+  
+  menu.style.display = isMenuVisible ? 'none' : 'block';
+  menu.style.position = 'fixed';
+  menu.style.top = '60px'; // Adjust according to your navbar height
+  menu.style.left = '0'; // Positions the menu to the left side
+}
+
+function toggleDropdown() {
+  const dropdown = document.getElementById('accountDropdown');
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+function logout() {
+  alert('You have logged out.');
+}
+
+function scrollCourses(direction) {
+  const courseList = document.getElementById('courseList');
+  const scrollAmount = direction === 'left' ? -500 : 500; // Adjust scroll amount as needed
+  const maxScrollLeft = courseList.scrollWidth - courseList.clientWidth;
+  
+  if (direction === 'right' && courseList.scrollLeft + scrollAmount > maxScrollLeft) {
+    courseList.scrollLeft = maxScrollLeft;
+  } else {
+    courseList.scrollLeft += scrollAmount;
+  }
+}
+
+
+    </script>
+
+</body>
+</html>

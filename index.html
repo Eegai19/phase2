@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S-KILL</title>
+  <style>
+   body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  background: #eaeaea;
+}
+
+.ripple-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: #4a90e2;
+  animation: ripple 15s infinite;
+  box-shadow: 0 0 1px 0 #4a90e2;
+}
+
+.small { width: 200px; height: 200px; left: -100px; bottom: -100px; }
+.medium { width: 400px; height: 400px; left: -200px; bottom: -200px; }
+.large { width: 600px; height: 600px; left: -300px; bottom: -300px; }
+.xlarge { width: 800px; height: 800px; left: -400px; bottom: -400px; }
+.xxlarge { width: 1000px; height: 1000px; left: -500px; bottom: -500px; }
+
+.shade1 { opacity: 0.2; }
+.shade2 { opacity: 0.5; }
+.shade3 { opacity: 0.7; }
+.shade4 { opacity: 0.8; }
+.shade5 { opacity: 0.9; }
+
+@keyframes ripple {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(0.8); }
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  background-color: #4a90e2;
+  padding: 15px 25px;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar .heading1 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #34495e;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 999;
+  overflow-y: auto;
+  padding: 60px 20px 20px;
+}
+
+.sidebar.active {
+  transform: translateX(0);
+}
+
+.sidebar a {
+  display: block;
+  padding: 15px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 18px;
+  border-bottom: 1px solid #34495e;
+}
+
+.sidebar a:hover {
+  background-color: #2c3e50;
+}
+
+.wholebar {
+  width: 100%;
+  height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 60px;
+  position: relative;
+}
+
+.form-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #4a90e2;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.signin, .login {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  border: 2px solid #4a90e2;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  display: none;
+}
+
+.signin.active, .login.active {
+  display: block;
+  opacity: 1;
+}
+
+.f1, .f2, .f3, .login .f4, .login .f5 {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #4a90e2;
+  border-radius: 5px;
+  transition: width 0.3s ease, border-color 0.3s ease;
+}
+
+.f1:hover, .f2:hover, .f3:hover, .login .f4:hover, .login .f5:hover,
+.f1:focus, .f2:focus, .f3:focus, .login .f4:focus, .login .f5:focus {
+  width: 300px;
+  border-color: #2980b9;
+}
+
+.submit2, .submit1 {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #4a90e2;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.submit2:hover, .submit2:focus, .submit1:hover, .submit1:focus {
+  background-color: #2980b9;
+  transform: scale(1.05);
+  outline: none;
+}
+
+.toggle-form {
+  cursor: pointer;
+  color: #4a90e2;
+  text-decoration: underline;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-container input {
+  margin-right: 10px;
+}
+
+.admin-button {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: #4a90e2;
+  color: #ffffff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.admin-button:hover, .admin-button:focus {
+  background-color: #2980b9;
+  transform: scale(1.05);
+  outline: none;
+}
+
+.footer {
+  background-color: #34495e;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  clear: both;
+}
+
+.footer-content {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer li {
+  margin-right: 20px;
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #ccc;
+}
+
+.welcome-message {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.typing-effect {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 2s steps(20) forwards;
+}
+
+@keyframes typing {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+#cursor {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="ripple-background">
+    <div class="circle xxlarge shade1"></div>
+    <div class="circle xlarge shade2"></div>
+    <div class="circle large shade3"></div>
+    <div class="circle medium shade4"></div>
+    <div class="circle small shade5"></div>
+  </div>
+
+  <div class="navbar">
+    <div class="heading1">S-KILL ADM</div>
+  </div>
+
+  <div class="wholebar">
+    <div class="form-container">
+      <form id="signupForm" class="signin active">
+        <h1>Sign Up</h1>
+        <input class="f1" id="name" type="text" placeholder="Enter your name" required>
+        <input class="f2" id="email" type="email" placeholder="Enter your email" required>
+        <input class="f3" id="password" type="password" placeholder="Enter your password" required>
+        <button class="submit2" type="submit">Sign Up</button>
+        <p class="toggle-form" onclick="toggleForm('login')">Already have an account? Log In</p>
+      </form>
+
+      <form id="loginForm" class="login">
+        <h1>Login</h1>
+        <input class="f4" id="loginEmail" type="email" placeholder="Enter your email" required>
+        <input class="f5" id="loginPassword" type="password" placeholder="Enter your password" required>
+        <button class="submit1" type="submit">Login</button>
+        <p class="toggle-form" onclick="toggleForm('signin')">Don't have an account? Sign Up</p>
+        <p><a href="#" onclick="forgotPassword()">Forgot Password?</a></p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <span><a href="https://linkedin.com/" aria-label="LinkedIn">LinkedIn</a></span>
+    <span><a href="https://github.com/" aria-label="GitHub">GitHub</a></span>
+    <span><a href="https://instagram.com/" aria-label="Instagram">Instagram</a></span>
+    <span><a href="mailto:your-email@example.com" aria-label="Mail">Mail</a></span>
+    <span><a href="https://youtube.com/" aria-label="Youtube">YouTube</a></span>
+    <p>&copy; 2023 Soft Skill Enhancement Platform. All Rights Reserved.</p>
+  </footer>
+  </div>
+
+  <script>
+   function toggleForm(formType) {
+  const signinForm = document.querySelector('.signin');
+  const loginForm = document.querySelector('.login');
+
+  if (formType === 'login') {
+    signinForm.classList.remove('active');
+    loginForm.classList.add('active');
+  } else {
+    loginForm.classList.remove('active');
+    signinForm.classList.add('active');
+  }
+}
+
+document.getElementById('signupForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  console.log('Sign Up Submitted:', { name, email, password });
+  alert(`Welcome, ${name}! Your account has been created.`);
+  toggleForm('login'); // Switch to login form after sign-up
+});
+
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+
+  console.log('Login Submitted:', { email, password });
+  alert(`Welcome back! You've successfully logged in.`);
+  window.location.href = 'mainest.html'; // Redirect to mainest.html
+});
+
+function forgotPassword() {
+  alert('A password reset link will be sent to your email.');
+}
+
+      
+  </script>
+</body>
+</html>

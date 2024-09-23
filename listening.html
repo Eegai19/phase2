@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Speak Module</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f0f0;
+      position: relative;
+    }
+    .nav-bar {
+      background: blue;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+    .logo {
+      color: white;
+      font-size: 24px;
+    }
+    .menu-button, .account-icon {
+      cursor: pointer;
+      color: white;
+    }
+    .account-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      background: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
+    .account-dropdown a {
+      display: block;
+      padding: 10px;
+      color: #4CAF50;
+      text-decoration: none;
+    }
+    .account-dropdown a:hover {
+      background: #f0f0f0;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      padding: 20px;
+      justify-content: space-between;
+    }
+    .audio-module {
+      flex: 1;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #audio-player {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .btn {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      background-color: #3e8e41;
+    }
+    .question-nodes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      padding: 20px;
+      height: 100%;
+    }
+    .question-node {
+      width: 50px;
+      height: 50px;
+      border: 2px solid #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #4CAF50;
+      font-size: 20px;
+      margin: 10px 0;
+    }
+    .completed-node {
+      background-color: #c8e6c9;
+    }
+    footer {
+      background: grey;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+    }
+    /* Sidebar styles */
+    .sidebar {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      background-color: white;
+      width: 200px;
+      height: 100%;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+    }
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar ul li {
+      padding: 15px 20px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #4CAF50;
+    }
+    .sidebar ul li a:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav-bar">
+    <div class="menu-button" onclick="toggleMenu()">☰ Menu</div>
+    <div class="logo"> <a href="http://127.0.0.1:5500/mainest.html">S-KILL</div></a>
+    <div class="account-icon" onclick="toggleDropdown()">
+        Account
+        <div class="account-dropdown" id="accountDropdown">
+            <a href="#" id="emailDisplay">user@example.com</a>
+            <a href="index" onclick="logout()">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="#">Evaluate</a></li>
+        <li><a href="#">Settings</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+  <div class="audio-module">
+    <p>Listen to the audio once and repeat it:</p>
+    <audio id="audio-player" controls>
+      <source id="audio-source" src="audio1.wav" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+    
+    <button type="button" class="btn" id="record-button">
+      <span class="glyphicon glyphicon-record"></span> Record
+    </button>
+    <div id="timer" style="font-size: 20px; margin-top: 10px;"></div>
+    <div id="feedback-container"></div>
+    
+    <button id="next-button" class="btn" style="display: none;">Next</button>
+    <button id="submit-button" class="btn" style="display: none;">Submit Test</button>
+  </div>
+
+  <div class="question-nodes" id="question-nodes"></div>
+</div>
+
+<footer>
+    <p>&copy; 2024 S-KILL Enhancement Platform | <a href="#" style="color: white;">Privacy Policy</a> | <a href="#" style="color: white;">Terms of Service</a></p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    const audioPlayer = document.getElementById('audio-player');
+    const recordButton = document.getElementById('record-button');
+    const feedbackContainer = document.getElementById('feedback-container');
+    const questionNodesContainer = document.getElementById('question-nodes');
+    const nextButton = document.getElementById('next-button');
+    const submitButton = document.getElementById('submit-button');
+
+    let mediaRecorder = null;
+    let stream = null;
+    let timerInterval;
+    let currentAudioIndex = 0;
+    const audioFiles = ['audio1.wav', 'audio2.wav', 'audio3.wav', 'audio4.wav', 'audio5.wav', 
+                        'audio6.wav', 'audio7.wav', 'audio8.wav', 'audio9.wav', 'audio10.wav'];
+    let userResponses = [];
+
+    // Initialize question nodes
+    for (let i = 0; i < audioFiles.length; i++) {
+      const node = document.createElement('div');
+      node.className = 'question-node';
+      node.textContent = i + 1;
+      questionNodesContainer.appendChild(node);
+    }
+
+    audioPlayer.addEventListener('ended', () => {
+      audioPlayer.pause(); 
+      audioPlayer.currentTime = 0; 
+    });
+
+    recordButton.addEventListener('click', async () => {
+      if (currentAudioIndex < audioFiles.length) {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (event) => {
+          userResponses[currentAudioIndex] = new Blob([event.data], { type: 'audio/wav' });
+        };
+
+        mediaRecorder.start();
+        recordButton.disabled = true; 
+
+        let timeLeft = 2; // Changed to 2 seconds
+        const timerDisplay = document.getElementById('timer');
+        timerDisplay.textContent = `Time left: ${timeLeft}s`;
+
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          timerDisplay.textContent = `Time left: ${timeLeft}s`;
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            mediaRecorder.stop();
+            stream.getTracks().forEach(track => track.stop());
+            document.querySelectorAll('.question-node')[currentAudioIndex].classList.add('completed-node');
+
+            if (currentAudioIndex < audioFiles.length - 1) {
+              nextButton.style.display = 'block';
+            } else {
+              submitButton.style.display = 'block'; 
+            }
+            currentAudioIndex++;
+            resetForNextQuestion();
+          }
+        }, 1000);
+      }
+    });
+
+    nextButton.addEventListener('click', () => {
+      resetForNextQuestion();
+      nextButton.style.display = 'none'; 
+    });
+
+    function resetForNextQuestion() {
+      recordButton.disabled = false; 
+      audioPlayer.src = audioFiles[currentAudioIndex]; 
+      audioPlayer.load();
+    }
+
+    submitButton.addEventListener('click', () => {
+      const formData = new FormData();
+      for (let i = 0; i < userResponses.length; i++) {
+        formData.append('response' + i, userResponses[i]);
+      }
+
+      // POST request for user responses
+      fetch('/submit_responses', {
+        method: 'POST',
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          feedbackContainer.textContent = 'Responses submitted successfully!';
+        } else {
+          feedbackContainer.textContent = 'Failed to submit responses.';
+        }
+      }).catch(error => {
+        console.error('Error submitting responses:', error);
+      });
+    });
+
+    function toggleDropdown() {
+      document.getElementById('accountDropdown').classList.toggle('show');
+    }
+
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function logout() {
+      // Implement your logout logic here
+      console.log('Logging out');
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.account-icon')) {
+        var dropdowns = document.getElementsByClassName("account-dropdown");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+</script>
+</body>
+</html>

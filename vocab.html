@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: #1e90ff;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .menu-btn, .account-icon {
+            color: white;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .account-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background-color: white;
+            color: black;
+            border: 1px solid #1e90ff;
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .account-dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .account-dropdown a:hover {
+            background-color: #1e90ff;
+            color: white;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #f8f9fa;
+            position: absolute;
+            top: 0;
+            left: -200px;
+            transition: left 0.3s;
+            height: 100%;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 50px; /* Space for close button */
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .sidebar a:hover {
+            background-color: #e2e6ea;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #1e90ff;
+        }
+
+        .content {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            margin-top: 10px; /* Adjusted for navbar height */
+            margin-left: 220px; /* Space for sidebar */
+        }
+
+        .left-side {
+            flex: 80%;
+            padding-right: 20px;
+        }
+
+        .right-side {
+            flex: 20%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .question-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 2px solid #1e90ff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .node {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #1e90ff;
+            margin: 5px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+        }
+
+        .node.completed {
+            background-color: green;
+            color: white;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            background-color: #1e90ff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff4500;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background-color: #1e90ff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <span class="menu-btn" onclick="toggleSidebar()">☰</span>
+        <span><a href="http://127.0.0.1:5500/mainest.html">S-KILL</span></a>
+        <span class="account-icon" onclick="toggleDropdown()">⚙️</span>
+        <div class="account-dropdown" id="accountDropdown">
+            <a href="#">Profile</a>
+            <a href="index.html">Logout</a>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <span class="close-btn" onclick="toggleSidebar()">✖️</span>
+        <a href="#">Dashboard</a>
+        <a href="#">Evaluation</a>
+        <a href="#">Settings</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Left Side: Questions -->
+        <div class="left-side">
+            <div class="timer" id="timer">Time Remaining: 10:00</div>
+            <div id="question-box" class="question-box">
+                <p id="question-text">Click 'Start Test' to begin.</p>
+                <div id="answers"></div>
+                <button id="next-btn" class="submit-btn" style="display: none;" onclick="nextQuestion()">Next</button>
+                <button id="start-btn" class="submit-btn" onclick="startTest()">Start Test</button>
+            </div>
+        </div>
+
+        <!-- Right Side: Question Nodes -->
+        <div class="right-side" id="question-nodes">
+            <!-- Nodes will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">© 2024 S-KILL. All rights reserved.</div>
+
+    <script>
+        const questions = [
+            { question: "What is the meaning of 'reverence'?", answers: ["Disrespect", "Honor", "Hatred", "Fear"], correct: 1 },
+            { question: "What is the meaning of 'benevolent'?", answers: ["Kind", "Hostile", "Indifferent", "Malicious"], correct: 0 },
+            { question: "What is the meaning of 'ephemeral'?", answers: ["Eternal", "Temporary", "Endless", "Infinite"], correct: 1 },
+            { question: "What is the meaning of 'eloquent'?", answers: ["Unclear", "Fluent", "Silent", "Indifferent"], correct: 1 },
+            { question: "What is the meaning of 'resilient'?", answers: ["Weak", "Stubborn", "Flexible", "Delicate"], correct: 2 },
+            { question: "What is the meaning of 'ambiguous'?", answers: ["Clear", "Uncertain", "Specific", "Obvious"], correct: 1 },
+            { question: "What is the meaning of 'zealous'?", answers: ["Lackluster", "Ardent", "Indifferent", "Careless"], correct: 1 },
+            { question: "What is the meaning of 'pragmatic'?", answers: ["Idealistic", "Practical", "Irrational", "Emotional"], correct: 1 },
+            { question: "What is the meaning of 'eclectic'?", answers: ["Selective", "Narrow", "Limited", "Fixed"], correct: 0 },
+            { question: "What is the meaning of 'fickle'?", answers: ["Loyal", "Constant", "Capricious", "Stable"], correct: 2 },
+            { question: "What is the meaning of 'tenacious'?", answers: ["Weak", "Determined", "Flexible", "Indifferent"], correct: 1 },
+            { question: "What is the meaning of 'oblivious'?", answers: ["Aware", "Unmindful", "Mindful", "Attentive"], correct: 1 },
+            { question: "What is the meaning of 'vicarious'?", answers: ["Direct", "Substitute", "Immediate", "Involved"], correct: 1 },
+            { question: "What is the meaning of 'lucid'?", answers: ["Confusing", "Clear", "Muddled", "Vague"], correct: 1 },
+            { question: "What is the meaning of 'succinct'?", answers: ["Verbose", "Brief", "Rambling", "Lengthy"], correct: 1 },
+            { question: "What is the meaning of 'pervasive'?", answers: ["Rare", "Widespread", "Limited", "Localized"], correct: 1 },
+            { question: "What is the meaning of 'inundate'?", answers: ["Overwhelm", "Underwhelm", "Ignore", "Belittle"], correct: 0 },
+            { question: "What is the meaning of 'reticent'?", answers: ["Talkative", "Silent", "Open", "Garrulous"], correct: 1 },
+            { question: "What is the meaning of 'candid'?", answers: ["Deceptive", "Honest", "Insincere", "Ambiguous"], correct: 1 },
+            { question: "What is the meaning of 'meticulous'?", answers: ["Careless", "Detail-oriented", "Hasty", "Indifferent"], correct: 1 },
+            { question: "What is the meaning of 'consternation'?", answers: ["Calm", "Dismay", "Joy", "Excitement"], correct: 1 },
+            { question: "What is the meaning of 'ardent'?", answers: ["Indifferent", "Passionate", "Cold", "Apathetic"], correct: 1 },
+            { question: "What is the meaning of 'stable'?", answers: ["Unpredictable", "Constant", "Reliable", "Shaky"], correct: 2 }
+        ];
+
+        let currentQuestionIndex = 0;
+        let timer;
+        let timeRemaining = 600; // 10 minutes
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById("accountDropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+        }
+
+        function startTest() {
+            document.getElementById("start-btn").style.display = "none";
+            document.getElementById("next-btn").style.display = "block";
+            loadQuestion();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            const questionData = questions[currentQuestionIndex];
+            document.getElementById("question-text").innerText = questionData.question;
+            const answersContainer = document.getElementById("answers");
+            answersContainer.innerHTML = "";
+
+            questionData.answers.forEach((answer, index) => {
+                answersContainer.innerHTML += `
+                    <label>
+                        <input type="radio" name="answer" value="${index}"> ${answer}
+                    </label><br>
+                `;
+            });
+
+            updateQuestionNodes();
+        }
+
+        function updateQuestionNodes() {
+            const questionNodes = document.getElementById("question-nodes");
+            questionNodes.innerHTML = "";
+            questions.forEach((_, index) => {
+                const node = document.createElement("div");
+                node.classList.add("node");
+                node.innerText = index + 1;
+                if (index < currentQuestionIndex) {
+                    node.classList.add("completed");
+                }
+                questionNodes.appendChild(node);
+            });
+        }
+
+        function nextQuestion() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (selectedAnswer) {
+                const answerIndex = parseInt(selectedAnswer.value);
+                const isCorrect = answerIndex === questions[currentQuestionIndex].correct;
+                alert(isCorrect ? "Correct!" : "Wrong answer.");
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    clearInterval(timer);
+                    alert("Test completed!");
+                    // You can add logic here to show results or redirect
+                }
+            } else {
+                alert("Please select an answer.");
+            }
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    alert("Time's up!");
+                    // You can add logic here to show results or redirect
+                } else {
+                    timeRemaining--;
+                    const minutes = Math.floor(timeRemaining / 60);
+                    const seconds = timeRemaining % 60;
+                    document.getElementById("timer").innerText = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

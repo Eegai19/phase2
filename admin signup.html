@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Sign-In / Sign-Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Importing Google Font */
+        @import url('https://fonts.googleapis.com/css?family=Exo:100');
+
+        /* Background data (Original source: subtlepatterns.com/grid-me) */
+        body {
+            margin: 0;
+            font-family: 'Exo', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABnSURBVHja7M5RDYAwDEXRDgmvEocnlrQS2SwUFST9uEfBGWs9c97nbGtDcquqiKhOImLs/UpuzVzWEi1atGjRokWLFi1atGjRokWLFi1atGjRokWLFi1af7Ukz8xWp8z8AAAA//8DAJ4LoEAAlL1nAAAAAElFTkSuQmCC") repeat;
+            animation: bg-scrolling 10s linear infinite;
+            color: #999;
+            text-align: center;
+        }
+
+        @keyframes bg-scrolling {
+            from { background-position: 0 0; }
+            to { background-position: 50px 50px; }
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+            background-color: #1e90ff; /* Dodger blue for navbar */
+            padding: 15px 25px;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .menu {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff; /* White text for menu */
+        }
+
+        .navbar .heading1 {
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            color: #ffffff; /* White text for heading */
+        }
+
+        .form-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            border: 2px solid #1e90ff; /* Dodger blue border */
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #ffe4c4; /* Peach-light sandal background color */
+            margin: 60px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1; /* Ensure form is above background */
+            border-radius: 20px; /* More rounded corners */
+        }
+
+        .form-container .heading2 {
+            display: flex;
+            justify-content: center;
+            color: #1e90ff; /* Dodger blue for heading */
+            margin-bottom: 20px;
+        }
+
+        .form-container input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #1e90ff; /* Dodger blue border */
+            border-radius: 10px; /* Rounded input fields */
+            transition: width 0.3s ease, border-color 0.3s ease;
+        }
+
+        .form-container input:hover, .form-container input:focus {
+            width: 300px;
+            border-color: #00008b; /* Dark blue border on hover */
+        }
+
+        .form-container button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #1e90ff; /* Dodger blue background */
+            color: #ffffff; /* White text */
+            border: none;
+            border-radius: 10px; /* Rounded button */
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .form-container button:hover, .form-container button:focus {
+            background-color: #4682b4; /* Steel blue on hover */
+            transform: scale(1.05);
+            outline: none;
+        }
+
+        .admin-link, .user-portal {
+            color: #1e90ff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .admin-link:hover, .user-portal:hover {
+            color: #00008b;
+        }
+
+        .user-portal {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        /* Infinite Background Scrolling Animation */
+        .background {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 0; /* Ensure background is behind other content */
+            animation: bg-scrolling 10s linear infinite;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <button class="menu"><i class="fas fa-bars"></i> Menu</button>
+        <h1 class="heading1">Admin Portal</h1>
+    </nav>
+
+    <div class="form-container" id="adminLoginForm">
+        <h2 class="heading2">Admin Sign-In</h2>
+        <form>
+            <input type="text" placeholder="Username" id="adminUsername" required>
+            <input type="password" placeholder="Password" id="adminPassword" required>
+            <button type="button" onclick="adminLogin()">Sign In</button>
+        </form>
+        <p>Don't have an account? <span class="admin-link" onclick="showSignup()">Sign up</span></p>
+        <p class="user-portal" onclick="redirectToUserPortal()">User Portal</p>
+    </div>
+
+    <div class="form-container" id="adminSignupForm" style="display: none;">
+        <h2 class="heading2">Admin Sign Up</h2>
+        <form>
+            <input type="text" placeholder="New Username" id="newAdminUsername" required>
+            <input type="password" placeholder="New Password" id="newAdminPassword" required>
+            <button type="button" onclick="adminSignup()">Sign Up</button>
+        </form>
+        <p>Already have an account? <span class="admin-link" onclick="showLogin()">Login</span></p>
+        <p class="user-portal" onclick="redirectToUserPortal()">User Portal</p>
+    </div>
+
+    <script>
+        function adminLogin() {
+            var username = document.getElementById('adminUsername').value;
+            var password = document.getElementById('adminPassword').value;
+
+            // Retrieve stored admins from localStorage
+            const storedAdmins = JSON.parse(localStorage.getItem('admins')) || [];
+
+            // Check against stored admins
+            const admin = storedAdmins.find(admin => admin.username === username && admin.password === password);
+
+            if (admin) {
+                alert('Login successful');
+                window.location.href = 'admin-homepage.html'; // Redirect to the admin homepage
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        function showSignup() {
+            document.getElementById('adminLoginForm').style.display = 'none';
+            document.getElementById('adminSignupForm').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('adminLoginForm').style.display = 'block';
+            document.getElementById('adminSignupForm').style.display = 'none';
+        }
+
+        function adminSignup() {
+            var newUsername = document.getElementById('newAdminUsername').value;
+            var newPassword = document.getElementById('newAdminPassword').value;
+
+            // Add new admin to the list
+            if (newUsername && newPassword) {
+                let storedAdmins = JSON.parse(localStorage.getItem('admins')) || [];
+                storedAdmins.push({ username: newUsername, password: newPassword });
+                localStorage.setItem('admins', JSON.stringify(storedAdmins));
+                alert('Sign up successful! Please log in.');
+                showLogin();
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        function redirectToUserPortal() {
+            window.location.href = 'index.html'; // Redirect to user portal
+        }
+
+        // Pre-fill login form if there's a previously logged in admin
+        window.onload = function () {
+            const loggedInAdmin = localStorage.getItem('loggedInAdmin');
+            if (loggedInAdmin) {
+                const admin = JSON.parse(loggedInAdmin);
+                document.getElementById('adminUsername').value = admin.username;
+            }
+        };
+    </script>
+</body>
+</html>

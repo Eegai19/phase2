@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pronunciation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background-color: #1e90ff;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .menu-btn, .account-icon {
+            color: white;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        .account-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background-color: white;
+            color: black;
+            border: 1px solid #1e90ff;
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .account-dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+        .account-dropdown a:hover {
+            background-color: #1e90ff;
+            color: white;
+        }
+        .close-btn {
+            cursor: pointer;
+            color: black;
+            font-size: 16px;
+            padding: 5px;
+            text-align: right;
+        }
+        .content {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+        }
+        .left-side {
+            flex: 80%;
+            padding-right: 20px;
+        }
+        .right-side {
+            flex: 20%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .question-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 2px solid #1e90ff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .node {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #1e90ff;
+            margin: 5px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            transition: background-color 0.3s;
+        }
+        .node.completed {
+            background-color: green;
+            color: white;
+        }
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff4500;
+            margin-bottom: 10px;
+        }
+        .submit-btn, .record-btn, .next-btn {
+            background-color: #1e90ff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .footer {
+            background-color: #1e90ff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+        .result-box {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid #1e90ff;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #1e90ff;
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: white;
+        }
+        .sidebar a:hover {
+            background-color: #1c86e8;
+        }
+        .sidebar.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <span class="menu-btn" onclick="toggleSidebar()">☰</span>
+        <span> <a href="http://127.0.0.1:5500/mainest.html">S-KILL</span></a>
+        <span class="account-icon" onclick="toggleDropdown()">⚙️</span>
+        <div class="account-dropdown" id="accountDropdown">
+            <div class="close-btn" onclick="toggleDropdown()">✖️</div>
+            <a href="#">Profile</a>
+            <a href="#">Logout</a>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" onclick="toggleSidebar()">✖️</div>
+        <a href="#">Dashboard</a>
+        <a href="#">Evaluation</a>
+        <a href="#">Settings</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Left Side: Pronunciation Test -->
+        <div class="left-side">
+            <div class="timer" id="timer">Time Remaining: 10:00</div>
+            <div id="question-box" class="question-box">
+                <p id="question-text">Click 'Start Test' to begin.</p>
+                <button id="start-btn" class="submit-btn" onclick="startTest()">Start Test</button>
+                <button id="record-btn" class="record-btn" style="display:none;" onclick="toggleRecording()">Start Recording</button>
+                <button id="next-btn" class="next-btn" style="display:none;" onclick="nextQuestion()">Next</button>
+                <button id="submit-btn" class="submit-btn" style="display:none;" onclick="submitTest()">Submit</button>
+            </div>
+            <div id="result-box" class="result-box"></div>
+        </div>
+
+        <!-- Right Side: Question Nodes -->
+        <div class="right-side" id="question-nodes">
+            <div class="matrix" id="question-matrix">
+                <!-- Nodes will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">© 2024 S-KILL. All rights reserved.</div>
+
+    <script>
+        const questions = [
+            "How do you pronounce 'algorithm'?",
+            "How do you pronounce 'database'?",
+            "How do you pronounce 'encryption'?",
+            "How do you pronounce 'syntax'?",
+            "How do you pronounce 'variable'?",
+            "How do you pronounce 'function'?",
+            "How do you pronounce 'compile'?",
+            "How do you pronounce 'debug'?",
+            "How do you pronounce 'interface'?",
+            "How do you pronounce 'repository'?",
+            "How do you pronounce 'programming'?",
+            "How do you pronounce 'debugging'?",
+            "How do you pronounce 'recursion'?",
+            "How do you pronounce 'iteration'?",
+            "How do you pronounce 'parameter'?",
+            "How do you pronounce 'architecture'?",
+            "How do you pronounce 'framework'?",
+            "How do you pronounce 'scripting'?",
+            "How do you pronounce 'exception'?",
+            "How do you pronounce 'inheritance'?"
+        ];
+
+        let currentQuestion = 0;
+        let timeRemaining = 600; // 10 minutes in seconds
+        let timerId;
+        let isRecording = false;
+        let mediaRecorder;
+        let audioChunks = [];
+        let results = [];
+        let correctPronunciations = 0; // Counter for correct pronunciations
+
+        function startTest() {
+            currentQuestion = 0;
+            timeRemaining = 600;
+            correctPronunciations = 0; // Reset counter
+            document.getElementById("start-btn").style.display = "none";
+            document.getElementById("record-btn").style.display = "inline-block";
+            document.getElementById("next-btn").style.display = "inline-block";
+            document.getElementById("submit-btn").style.display = "none";
+            updateQuestionNodes();
+            displayQuestion();
+            startTimer();
+        }
+
+        function displayQuestion() {
+            if (currentQuestion >= questions.length) {
+                endTest();
+                return;
+            }
+
+            document.getElementById("question-text").innerText = questions[currentQuestion];
+            updateQuestionNodes();
+        }
+
+        function endTest() {
+            clearInterval(timerId);
+            document.getElementById("record-btn").style.display = "none";
+            document.getElementById("next-btn").style.display = "none";
+            document.getElementById("submit-btn").style.display = "inline-block";
+            document.getElementById("result-box").style.display = "block";
+            document.getElementById("result-box").innerText = `You got ${correctPronunciations} out of ${questions.length} correct.`;
+        }
+
+        function startTimer() {
+            timerId = setInterval(() => {
+                timeRemaining--;
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById("timer").innerText = `Time Remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeRemaining <= 0) {
+                    clearInterval(timerId);
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length) {
+                displayQuestion();
+                currentQuestion++;
+            }
+        }
+
+        function submitTest() {
+            endTest();
+        }
+
+        function toggleRecording() {
+            if (isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                document.getElementById("record-btn").innerText = "Start Recording";
+            } else {
+                startRecording();
+                isRecording = true;
+                document.getElementById("record-btn").innerText = "Stop Recording";
+            }
+        }
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        audioChunks = []; // Reset for the next recording
+                        // Here you could add functionality to analyze the recording
+                    };
+                });
+        }
+
+        function updateQuestionNodes() {
+            const matrix = document.getElementById("question-matrix");
+            matrix.innerHTML = ""; // Clear previous nodes
+            questions.forEach((question, index) => {
+                const node = document.createElement("div");
+                node.className = "node";
+                node.innerText = index + 1;
+                if (index < currentQuestion) {
+                    node.classList.add("completed");
+                    correctPronunciations++; // Simulating a correct answer for completed questions
+                }
+                matrix.appendChild(node);
+            });
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("show");
+        }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById("accountDropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+    </script>
+</body>
+</html>
